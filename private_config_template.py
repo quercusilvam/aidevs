@@ -1,0 +1,5 @@
+API_KEY_SERVICE = ''
+TOKEN_URL = ''
+TASK_URL = ''
+ANSWER_URL = ''
+OPENAI_API_KEY = ''
