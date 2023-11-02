@@ -44,6 +44,20 @@ class AiDevsRestapiHelper:
         return response.json()
 
 
+class ModeratorValidationException(Exception):
+    """Given text is not valid, and it's violating our policy(ies)."""
+
+    err_text = 'Given text violates policy(ies)!'
+
+    def __init__(self):
+        """Default constructor."""
+        super().__init__(self.err_text)
+
+    def __init__(self, text, details):
+        """Constructor with details."""
+        super().__init__({'title': self.err_text, 'text': text, 'details': details})
+
+
 class OpenAiModerator:
     """Classifies if text violates OpenAI's Content Policy."""
 
@@ -63,10 +77,7 @@ class OpenAiModerator:
         flagged = result['results'][0]['flagged']
         details = result['results'][0]
         if flagged:
-            print('Message is not allowed')
-            print(text)
-            print(details)
-
+            raise ModeratorValidationException(text, details)
 
 
 class OpenAiHelper:
