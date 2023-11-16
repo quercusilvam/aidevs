@@ -11,6 +11,7 @@ with OpenAiHelper() as oai:
         {'role': 'user', 'content': 'Who won the world series in 2020?'}
     ]
     print(oai.chat_completion(test_message))
+    print(oai.get_token_count("""I'm a helpful assistant"""))
 
 oam = OpenAiModerator()
 try:

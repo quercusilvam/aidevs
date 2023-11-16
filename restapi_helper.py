@@ -6,6 +6,7 @@ from langchain.prompts.chat import ChatPromptTemplate
 from langchain.schema import BaseOutputParser
 
 import openai
+import tiktoken
 import requests
 
 
@@ -39,7 +40,7 @@ class AiDevsRestapiHelper:
         """Submit answer."""
         js = {'answer': answer}
         response = requests.post(private_config.ANSWER_URL + self._authorization_token, json=js)
-        assert response.status_code < 300, {'HTTP code': response.status_code, 'JSON': response.json()}
+        assert response.status_code < 300, {'Answer': js, 'HTTP code': response.status_code, 'JSON': response.json()}
         print(response.json())
         return response.json()
 
@@ -89,6 +90,7 @@ class OpenAiHelper:
         """Init self - get authorization token, set default model etc."""
         self.model = model
         self.api_key = private_config.OPENAI_API_KEY
+        self.encoding = tiktoken.encoding_for_model(model)
 
     def __enter__(self, model=model_35):
         """Init the class to use with 'with' statement."""
@@ -117,6 +119,13 @@ class OpenAiHelper:
 
         return text
 
+    def get_token_count(self, message):
+        """Return token count bsed on tiktoken library."""
+        return tiktoken.get_encoding(message)
+
+    def encode(self, message):
+        """Return token count bsed on tiktoken library."""
+        return self.encoding.encode(message)
 
 class SimpleOutputParser(BaseOutputParser):
     """Parse the output of an LLM call to a simple str. It removes content= at start"""
