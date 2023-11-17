@@ -36,6 +36,12 @@ class AiDevsRestapiHelper:
         print(response.json())
         return response.json()
 
+    def ask_question(self, question):
+        response = requests.post(private_config.TASK_URL + self._authorization_token, data={'question': question})
+        assert response.status_code < 300, {'question': question, 'HTTP code': response.status_code, 'JSON': response.json()}
+        print(response.json())
+        return response.json()
+
     def submit_answer(self, answer):
         """Submit answer."""
         js = {'answer': answer}
