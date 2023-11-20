@@ -29,16 +29,18 @@ class AiDevsRestapiHelper:
         """Exit function for with statement."""
         pass
 
-    def get_task(self):
+    def get_task(self, verbose=True):
         """Get task details."""
         response = requests.get(private_config.TASK_URL + self._authorization_token)
         assert response.status_code < 300, {'HTTP code': response.status_code, 'JSON': response.json()}
-        print(response.json())
+        if verbose:
+            print(response.json())
         return response.json()
 
     def ask_question(self, question):
         response = requests.post(private_config.TASK_URL + self._authorization_token, data={'question': question})
-        assert response.status_code < 300, {'question': question, 'HTTP code': response.status_code, 'JSON': response.json()}
+        assert response.status_code < 300, {'question': question, 'HTTP code': response.status_code,
+                                            'JSON': response.json()}
         print(response.json())
         return response.json()
 
@@ -133,6 +135,7 @@ class OpenAiHelper:
     def encode(self, message):
         """Return token count bsed on tiktoken library."""
         return self.encoding.encode(message)
+
 
 class SimpleOutputParser(BaseOutputParser):
     """Parse the output of an LLM call to a simple str. It removes content= at start"""
